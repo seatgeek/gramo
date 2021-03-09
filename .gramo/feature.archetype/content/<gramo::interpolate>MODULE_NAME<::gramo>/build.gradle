@@ -31,8 +31,7 @@ apply plugin: SeatGeekKotlinSdkModulePlugin
 apply plugin: "com.squareup.anvil"
 
 dependencies {
-<gramo::includeIf=tags:android>
-    api project(":<gramo::interpolate>MODULE_NAME<::gramo>:view")
+<gramo::includeIf=tags:android>api project(":<gramo::interpolate>MODULE_NAME<::gramo>:view")
     api project(":<gramo::interpolate>MODULE_NAME<::gramo>:presentation")
 <::gramo>
     api project(":<gramo::interpolate>MODULE_NAME<::gramo>:core")

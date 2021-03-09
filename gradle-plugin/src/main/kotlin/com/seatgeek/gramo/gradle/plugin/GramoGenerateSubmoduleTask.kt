@@ -2,13 +2,13 @@ package com.seatgeek.gramo.gradle.plugin
 
 import com.google.gson.Gson
 import com.seatgeek.gramo.gradle.plugin.model.ArchetypeConfiguration
+import java.io.File
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
-import java.io.File
 
-open class GramoModuleTask : DefaultTask() {
+open class GramoGenerateSubmoduleTask : DefaultTask() {
     @get:Input
     @set:Option(option = "module_name", description = "Name of the primary module spinal case")
     var baseModuleName: String = ""
@@ -30,18 +30,56 @@ open class GramoModuleTask : DefaultTask() {
     var configuration: String = "default"
 
     @get:Input
+    @set:Option(option = "commit_path", description = "Determines where to fully commit this module's source code to relative to the project root")
+    var commitPathRelativeToRoot: String = ""
+
+    @get:Input
+    @set:Option(option = "commit", description = "Determines whether to commit this code to its destination specified by --commit_path")
+    var shouldCommit: Boolean = false
+
+    @get:Input
     lateinit var gramoExtension: GramoGradleExtension
 
     private val interpolationMap by lazy {
-        resolveInterpolationMap()
+        mapOf(
+            "GROUP_ID" to groupId,
+            "MODULE_NAME" to baseModuleName.toLowerCase(),
+            "MODULE_CLASS_NAME" to moduleClassName,
+            "ROOT_PACKAGE" to groupId.toLowerCase(),
+            "ROOT_PACKAGE_PATH" to groupId.replace('.', '/'),
+            "VERSION" to gramoExtension.versionString
+        )
     }
 
     private lateinit var tags: List<String>
 
     @TaskAction
     fun run() {
+        // TODO: Ensure there are not any uncommitted changes before continuing
+
         validateInputs()
         generateModuleFromArchetype()
+
+        if (shouldCommit) {
+            moveModuleIntoPlace()
+
+            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+            println("Generated code can be found at ${project.rootProject.projectDir.resolve(commitPathRelativeToRoot)}\n")
+            println("Be sure to include the new module/modules in your settings gradle file and make any required adjustments.")
+            println("It's recommended to use an auto-formatter to convert this new code to your team's style.")
+            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+        } else {
+            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+            println("Generated code can be found at ${gramoExtension.buildDirectory} for your inspection.\n")
+            println(
+                "If you would like to commit this to the codebase, ensure you've committed your code to " +
+                "git and run the generateSubmodule task again with the command line option --commit.\n\n" +
+                "By default the code will be committed in the project's root directory, " +
+                "${project.rootProject.projectDir}, but that can be changed by including the intended" +
+                "path relative to the project root using: --commit_path=<path_to_existing_module>."
+            )
+            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+        }
     }
 
     private fun generateModuleFromArchetype() {
@@ -59,6 +97,16 @@ open class GramoModuleTask : DefaultTask() {
             contentRoot = gramoExtension.buildDirectory,
             directory = gramoExtension.buildDirectory
         )
+    }
+
+    private fun moveModuleIntoPlace() {
+        val commitDirectory = project.rootProject.projectDir
+            .resolve(requireNotNull(commitPathRelativeToRoot))
+
+        gramoExtension.buildDirectory
+            .copyRecursively(commitDirectory, overwrite = false) { _, exception ->
+                throw exception
+            }
     }
 
     private fun resolveArchetypeContent(archetypeDirectory: File): File = archetypeDirectory
@@ -80,15 +128,6 @@ open class GramoModuleTask : DefaultTask() {
         return Gson().fromJson(configurationReader, ArchetypeConfiguration::class.java)
     }
 
-    private fun resolveInterpolationMap(): Map<String, String> = mapOf(
-        "GROUP_ID" to groupId,
-        "MODULE_NAME" to baseModuleName.toLowerCase(),
-        "MODULE_CLASS_NAME" to moduleClassName,
-        "ROOT_PACKAGE" to groupId.toLowerCase(),
-        "ROOT_PACKAGE_PATH" to groupId.replace('.', '/'),
-        "VERSION" to gramoExtension.versionString,
-    )
-
     private fun generateAndRecurseDirectories(contentRoot: File, directory: File) {
 
         val renamedDirectory = if (contentRoot != directory) {
@@ -109,7 +148,6 @@ open class GramoModuleTask : DefaultTask() {
                         ?.apply { rewriteFileContent(this) }
                 }
             }
-            ?: println("$directory was deleted.")
     }
 
     private val gramoOpeningTag = "<gramo::"
@@ -129,7 +167,7 @@ open class GramoModuleTask : DefaultTask() {
                 .indexOf(gramoOpeningTag, startIndex = offset)
                 .also { firstOpenIndex = it } > -1) {
 
-            println("Opening tag found at $firstOpenIndex")
+            println("Opening tag found at index: $firstOpenIndex")
 
             val nextOpen = interpolatedDocument.indexOf(gramoOpeningTag, startIndex = firstOpenIndex + 1)
             val nextClose = interpolatedDocument.indexOf(gramoClosingTag, startIndex = firstOpenIndex + 1)
@@ -140,7 +178,7 @@ open class GramoModuleTask : DefaultTask() {
                 throw IllegalStateException(
                     "Malformed gramo tag at:\n${
                         interpolatedDocument.substring(
-                            startIndex = firstOpenIndex, 
+                            startIndex = firstOpenIndex,
                             endIndex = (firstOpenIndex + 100).coerceAtMost(interpolatedDocument.length - 1))
                     }"
                 )
@@ -172,7 +210,6 @@ open class GramoModuleTask : DefaultTask() {
         }
 
         val trimmedAttributesLine = attributesLine.value.trim()
-
 
         println("Generating match for subdocument: $document")
 

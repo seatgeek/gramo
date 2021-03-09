@@ -10,6 +10,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.11.1")
         classpath("org.jlleitschuh.gradle:ktlint-gradle:9.2.1")
+        classpath("com.noheltcj.zinc:gradle-plugin:0.0.3")
     }
 }
 
@@ -51,6 +52,14 @@ val uploadGradlePluginArchives: Task by tasks.creating {
 
 val uploadArchives: Task by tasks.getting {
     dependsOn(uploadGradlePluginArchives)
+}
+
+val publishGradlePluginLocally: Task by tasks.creating {
+    dependsOn(gradle.includedBuild("gradle-plugin").task(":publishAllPublicationsToLocalRepository"))
+}
+
+val publishLocally: Task by tasks.creating {
+    dependsOn(publishGradlePluginLocally)
 }
 
 subprojects {
