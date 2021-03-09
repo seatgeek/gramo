@@ -1,0 +1,3 @@
+<manifest 
+    package="<gramo::interpolate>ROOT_PACKAGE<::gramo>"
+    />
