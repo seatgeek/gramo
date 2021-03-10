@@ -9,6 +9,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 
 open class GramoGenerateSubmoduleTask : DefaultTask() {
+
     @get:Input
     @set:Option(option = "module_name", description = "Name of the primary module spinal case")
     var baseModuleName: String = ""

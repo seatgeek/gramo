@@ -6,13 +6,38 @@
 An extensible template processor for use with gradle in large multi-module projects.
 
 ## Introduction
-TBD
+This project is the result of a SeatGeek hackathon. In its current state, the project should 
+be considered pre-alpha. That being said, this doesn't need to run in production. Using this is
+safe as long as you commit your code to a source control system before using it.
 
 ## How it works
-TBD
+TLDR; You can build your own module archetype/configurations that employs a specialized markdown
+language to annotate files, directories, and code to produce modules matching your specification.
+
+### Gramo Markdown
+The markdown used to code archetypes is fairly limited at the moment, but suites our needs for
+the moment. Unfortunately, it doesn't have an interpreter yet, so be sure to read carefully and 
+pay attention to module generation error messages.
+
+In essence, a markdown tag always has a single attribute which immediately follows `<gramo::` 
+in the opening tag.
+
+#### interpolate 
+Searches the configuration variables keyed by whatever content is resolved between the open/close tags as a key.
+
+Currently available variables:
+ - GROUP_ID - e.g. "com.example"
+ - MODULE_NAME - e.g. "example"
+ - MODULE_CLASS_NAME - e.g. "Example"
+ - ROOT_PACKAGE - always matches the group_id
+ - ROOT_PACKAGE_PATH - the group_id delimited by file separators
+ - VERSION - can also be code e.g. "ext.version" 
+
+#### includeIf
+To be continued...
 
 ## Setup
-Artifacts can be downloaded from Maven Central... soon?
+Artifacts can be downloaded from Maven Central... soon
 
 ### Gradle Kotlin Script
 ```kotlin
@@ -21,7 +46,7 @@ plugins {
 }
 
 gramo {
-  architetypesPath = "path_to_my_archetypes"
+  archetypesPath = "path_to_my_archetypes"
 }
 ```
 
@@ -34,4 +59,17 @@ plugins {
 gramo {
     archetypesPath = 'path_to_my_archetypes'
 }
+```
+
+### Old School
+```groovy
+buildscript {
+    // ...
+    
+    dependencies {
+        classpath 'com.seatgeek.gramo:gradle-plugin:0.0.1'
+    }
+}
+
+apply plugin: 'com.seatgeek.gramo'
 ```
