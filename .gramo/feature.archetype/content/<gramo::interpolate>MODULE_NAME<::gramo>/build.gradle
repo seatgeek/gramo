@@ -1,49 +1,26 @@
-buildscript {
-    dependencies {
-        classpath Deps.anvil.gradle_plugin
-    }
+plugins {
+    id 'com.squareup.anvil' version "${anvil_version}"
 }
 
-<gramo::includeIf=tags:android>
-apply plugin: "com.android.library"
-<gramo::includeIf=tags:sdk>
-
+<gramo::includeIf=tags:android>apply plugin: "com.android.library"<::gramo>
+<gramo::includeIf=!tags:android>apply plugin: "kotlin"<::gramo>
+<gramo::includeIf=tags:publishable>
 archivesBaseName = "<gramo::interpolate>MODULE_NAME<::gramo>-feature"
 group = "<gramo::interpolate>GROUP_ID<::gramo>"
-version "<gramo::interpolate>VERSION<::gramo>"
+version = "<gramo::interpolate>VERSION<::gramo>"
 
-apply plugin: SeatGeekAndroidSdkModulePlugin
+apply plugin: PublishingPlugin
 <::gramo>
-<gramo::includeIf=!tags:sdk>apply plugin: SeatGeekAndroidModulePlugin<::gramo>
-<::gramo>
-<gramo::includeIf=!tags:android>
-apply plugin: "kotlin"
-<gramo::includeIf=tags:sdk>
-
-archivesBaseName = "<gramo::interpolate>MODULE_NAME<::gramo>-feature"
-group = "<gramo::interpolate>GROUP_ID<::gramo>"
-version "<gramo::interpolate>VERSION<::gramo>"
-
-apply plugin: SeatGeekKotlinSdkModulePlugin
-<::gramo>
-<gramo::includeIf=!tags:sdk>apply plugin: SeatGeekKotlinModulePlugin<::gramo>
-<::gramo>
-apply plugin: "com.squareup.anvil"
 
 dependencies {
-<gramo::includeIf=tags:android>api project(":<gramo::interpolate>MODULE_NAME<::gramo>:view")
+    /** Example generated project submodules */
+<gramo::includeIf=tags:android>
+    api project(":<gramo::interpolate>MODULE_NAME<::gramo>:view")
     api project(":<gramo::interpolate>MODULE_NAME<::gramo>:presentation")
 <::gramo>
     api project(":<gramo::interpolate>MODULE_NAME<::gramo>:core")
     api project(":<gramo::interpolate>MODULE_NAME<::gramo>:data")
 
-    implementation project(":seatgeek-anvil-android")
-    implementation project(":seatgeek-commons")
-    implementation project(":seatgeek-kotlin-extensions")
-<gramo::includeIf=tags:android>
-    implementation project(":seatgeek-oolong")
-<::gramo>
-
-    implementation Deps.google.dagger.runtime
-    kapt Deps.google.dagger.compiler
+    implementation "com.google.dagger:dagger-compiler:${dagger_version}"
+    kapt "com.google.dagger:dagger:${dagger_version}"
 }

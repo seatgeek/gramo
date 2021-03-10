@@ -5,6 +5,7 @@ plugins {
 
 gramo {
     archetypesPath = ".gramo"
+    versionString = "\${version}"
 }
 
 application {

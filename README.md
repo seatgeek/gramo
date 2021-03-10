@@ -36,6 +36,14 @@ Currently available variables:
 #### includeIf
 To be continued...
 
+##Usage
+The following command will use the "feature" archetype to generate an example module in 
+the root project directory. Realistically, consumers of this project should create their
+own archetype, but feel free to use the example as a starting point.
+```
+./gradlew :example:generateSubmodule --name=Test --module_name=test --archetype=feature --configuration=kotlin_feature --group_id=com.example.test
+```
+
 ## Setup
 Artifacts can be downloaded from Maven Central... soon
 
