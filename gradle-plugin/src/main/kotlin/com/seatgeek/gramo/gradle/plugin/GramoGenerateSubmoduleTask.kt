@@ -2,7 +2,6 @@ package com.seatgeek.gramo.gradle.plugin
 
 import com.google.gson.Gson
 import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
-import com.seatgeek.gramo.gradle.plugin.extension.getStringProperty
 import com.seatgeek.gramo.gradle.plugin.helper.CopyArchetypeToBuildDirectory
 import com.seatgeek.gramo.gradle.plugin.helper.ExtractAndValidateArchetypeConfiguration
 import com.seatgeek.gramo.gradle.plugin.helper.ExtractArchetypePresetConfiguration
