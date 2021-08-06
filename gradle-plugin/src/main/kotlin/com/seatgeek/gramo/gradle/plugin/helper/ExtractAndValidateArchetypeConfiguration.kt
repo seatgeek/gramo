@@ -4,6 +4,7 @@ import com.seatgeek.gramo.gradle.plugin.entity.ArchetypeConfiguration
 import com.seatgeek.gramo.gradle.plugin.entity.ArchetypeConfigurationInputSet
 import com.seatgeek.gramo.gradle.plugin.entity.ExtraVariable
 import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
+import com.seatgeek.gramo.gradle.plugin.extension.getStringProperty
 import org.gradle.api.Project
 
 class ExtractAndValidateArchetypeConfiguration(
@@ -29,9 +30,11 @@ class ExtractAndValidateArchetypeConfiguration(
                         "Malformed object: extra_variable entries must have a value for 'name'. " +
                             "Please include this in your scheme.json or appropriate preset."
                     )
-                    val resolvedValue = project.property(name)?.toString() ?: value ?: throw IllegalArgumentException(
-                        "Extra property '$name' is required, but not supplied. Please include this property and retry"
-                    )
+                    val resolvedValue = project.getStringProperty(name)
+                        ?: value
+                        ?: throw IllegalArgumentException(
+                            "Extra property '$name' is required, but not supplied. Please include this property and retry"
+                        )
 
                     name to resolvedValue
                 }
