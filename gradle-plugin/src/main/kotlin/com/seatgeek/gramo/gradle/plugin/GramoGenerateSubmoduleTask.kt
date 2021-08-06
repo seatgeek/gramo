@@ -45,17 +45,22 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
 
     @TaskAction
     fun run() {
+        val gson = Gson()
         val validateDirectoryExists = ValidateDirectoryExists()
         val copyArchetypeToBuildDirectory = CopyArchetypeToBuildDirectory(
             validateDirectoryExists = validateDirectoryExists
         )
         val extractArchetypePresetConfiguration = ExtractArchetypePresetConfiguration(
             validateDirectoryExists = validateDirectoryExists,
-            gson = Gson()
+            gson = gson
+        )
+        val extractArchetypeSchemeConfiguration = ExtractArchetypeSchemeConfiguration(
+            validateDirectoryExists = validateDirectoryExists,
+            gson = gson
         )
         val extractArchetypeConfiguration = ExtractAndValidateArchetypeConfiguration(
             extractArchetypePresetConfiguration = extractArchetypePresetConfiguration,
-            validateDirectoryExists = validateDirectoryExists
+            extractArchetypeSchemeConfiguration = extractArchetypeSchemeConfiguration
         )
         val extractTaskInput = ExtractTaskInput(
             validateDirectoryExists = validateDirectoryExists
@@ -67,7 +72,7 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
         val mergeTransformedContentIntoCommitDirectory = MergeTransformedContentIntoCommitDirectory()
         val generateSubmodule = GenerateSubmodule(
             copyArchetypeToBuildDirectory = copyArchetypeToBuildDirectory,
-            extractArchetypeConfiguration = extractArchetypeConfiguration,
+            extractAndValidateArchetypeConfiguration = extractArchetypeConfiguration,
             mergeTransformedContentIntoCommitDirectory = mergeTransformedContentIntoCommitDirectory,
             transformArchetype = transformArchetype
         )
