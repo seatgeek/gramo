@@ -52,8 +52,6 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
     @get:Input
     lateinit var gramoExtension: GramoGradleExtension
 
-    private lateinit var tags: List<String>
-
     @TaskAction
     fun run() {
         val gson = Gson()
@@ -115,15 +113,11 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
                 println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
                 println("Generated code can be found at ${execution.commitDirectory}\n")
                 println("Be sure to include the new module/modules in your settings gradle file and make any required adjustments.")
-                println("It's recommended to use an auto-formatter to convert this new code to your team's style.")
-                println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+                println("It's recommended to use an auto-formatter to convert this new code to your team's style.\n")
 
-                solveMergeConflicts(
-                    targetDirectory = execution.commitDirectory,
-                    buildDirectory = taskInput.buildDirectory,
-                    merger = project.getStringProperty("gramo.conflict.merger") ?: "opendiff",
-                    mergeConflicts = mergeConflicts
-                )
+                solveMergeConflicts(mergeConflicts = mergeConflicts)
+
+                println("~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~")
             }
         }
     }
