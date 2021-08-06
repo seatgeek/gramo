@@ -2,6 +2,7 @@ package com.seatgeek.gramo.gradle.plugin
 
 import com.google.gson.Gson
 import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
+import com.seatgeek.gramo.gradle.plugin.extension.getStringProperty
 import com.seatgeek.gramo.gradle.plugin.helper.CopyArchetypeToBuildDirectory
 import com.seatgeek.gramo.gradle.plugin.helper.ExtractAndValidateArchetypeConfiguration
 import com.seatgeek.gramo.gradle.plugin.helper.ExtractArchetypePresetConfiguration
@@ -9,6 +10,7 @@ import com.seatgeek.gramo.gradle.plugin.helper.ExtractArchetypeSchemeConfigurati
 import com.seatgeek.gramo.gradle.plugin.helper.ExtractTaskInput
 import com.seatgeek.gramo.gradle.plugin.helper.GenerateSubmodule
 import com.seatgeek.gramo.gradle.plugin.helper.MergeTransformedContentIntoCommitDirectory
+import com.seatgeek.gramo.gradle.plugin.helper.SolveMergeConflicts
 import com.seatgeek.gramo.gradle.plugin.helper.TokenizeAndTransformDocument
 import com.seatgeek.gramo.gradle.plugin.helper.TransformArchetype
 import com.seatgeek.gramo.gradle.plugin.helper.ValidateDirectoryExists
@@ -79,6 +81,7 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
             tokenizeAndTransformDocument = tokenizeAndTransformDocument
         )
         val mergeTransformedContentIntoCommitDirectory = MergeTransformedContentIntoCommitDirectory()
+        val solveMergeConflicts = SolveMergeConflicts()
         val generateSubmodule = GenerateSubmodule(
             copyArchetypeToBuildDirectory = copyArchetypeToBuildDirectory,
             mergeTransformedContentIntoCommitDirectory = mergeTransformedContentIntoCommitDirectory,
@@ -90,7 +93,7 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
 
         println("Computed task inputs: $taskInput")
 
-        generateSubmodule(
+        val mergeConflicts = generateSubmodule(
             archetypeConfiguration = archetypeConfiguration,
             taskInput = taskInput
         )
@@ -114,6 +117,13 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
                 println("Be sure to include the new module/modules in your settings gradle file and make any required adjustments.")
                 println("It's recommended to use an auto-formatter to convert this new code to your team's style.")
                 println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+
+                solveMergeConflicts(
+                    targetDirectory = execution.commitDirectory,
+                    buildDirectory = taskInput.buildDirectory,
+                    merger = project.getStringProperty("gramo.conflict.merger") ?: "opendiff",
+                    mergeConflicts = mergeConflicts
+                )
             }
         }
     }

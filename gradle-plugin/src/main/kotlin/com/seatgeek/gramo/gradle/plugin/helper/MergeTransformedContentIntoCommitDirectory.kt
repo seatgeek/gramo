@@ -1,13 +1,13 @@
 package com.seatgeek.gramo.gradle.plugin.helper
 
+import com.seatgeek.gramo.gradle.plugin.entity.MergeConflict
 import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
-import java.io.File
 
 class MergeTransformedContentIntoCommitDirectory {
 
-    operator fun invoke(isMergeEnabled: Boolean, taskInput: TaskInput) {
-        when (val executionType = taskInput.executionType) {
-            TaskInput.ExecutionType.DryRun -> { /** Noop */ }
+    operator fun invoke(isMergeEnabled: Boolean, taskInput: TaskInput): List<MergeConflict> {
+        return when (val executionType = taskInput.executionType) {
+            TaskInput.ExecutionType.DryRun -> { emptyList() }
             is TaskInput.ExecutionType.ProductionRun -> {
                 var terminalException: Exception? = null
                 val mergeConflicts = mutableListOf<MergeConflict>()
@@ -38,9 +38,8 @@ class MergeTransformedContentIntoCommitDirectory {
                     }
 
                 terminalException?.run { throw this }
+                mergeConflicts
             }
         }
     }
-
-    data class MergeConflict(val target: File, val newFile: File)
 }
