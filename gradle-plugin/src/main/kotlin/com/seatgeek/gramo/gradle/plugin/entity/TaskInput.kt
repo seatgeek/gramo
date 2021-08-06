@@ -3,15 +3,17 @@ package com.seatgeek.gramo.gradle.plugin.entity
 import java.io.File
 
 data class TaskInput(
-    val archetype: String,
+    val archetypeDirectory: File,
+    val buildDirectory: File,
     val baseModuleName: String,
-    val configuration: String,
+    val preset: String,
     val groupId: String,
     val moduleClassName: String,
-    val executionType: ExecutionType
+    val executionType: ExecutionType,
+    val versionString: String
 ) {
     sealed class ExecutionType {
-        data class DryRun(val buildDirectory: File) : ExecutionType()
-        data class ProductionRun(val buildDirectory: File, val commitDirectory: File) : ExecutionType()
+        object DryRun : ExecutionType()
+        data class ProductionRun(val commitDirectory: File) : ExecutionType()
     }
 }

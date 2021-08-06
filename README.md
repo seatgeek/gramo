@@ -11,7 +11,7 @@ be considered pre-alpha. That being said, this doesn't need to run in production
 safe as long as you commit your code to a source control system before using it.
 
 ## How it works
-TLDR; You can build your own module archetype/configurations that employs a specialized markdown
+TLDR; You can build your own module archetype that employs a specialized markdown
 language to annotate files, directories, and code to produce modules matching your specification.
 
 ### Gramo Markdown
@@ -23,7 +23,7 @@ In essence, a markdown tag always has a single attribute which immediately follo
 in the opening tag.
 
 #### interpolate 
-Searches the configuration variables keyed by whatever content is resolved between the open/close tags as a key.
+Searches the configuration variables keyed by whatever content gets resolved between the open/close tags as a key.
 
 Currently available variables:
  - GROUP_ID - e.g. "com.example"
@@ -33,6 +33,8 @@ Currently available variables:
  - ROOT_PACKAGE_PATH - the group_id delimited by file separators
  - VERSION - can also be code e.g. "ext.version" 
 
+Additional variables can be included as specified within the archetype's scheme.json file or preset
+
 #### includeIf
 To be continued...
 
@@ -41,7 +43,7 @@ The following command will use the "feature" archetype to generate an example mo
 the root project directory. Realistically, consumers of this project should create their
 own archetype, but feel free to use the example as a starting point.
 ```
-./gradlew :example:generateSubmodule --name=Test --module_name=test --archetype=feature --configuration=kotlin_feature --group_id=com.example.test
+./gradlew :example:generateSubmodule --name=Test --module_name=test --archetype=feature --preset=default --group_id=com.example.test
 ```
 
 ## Setup
