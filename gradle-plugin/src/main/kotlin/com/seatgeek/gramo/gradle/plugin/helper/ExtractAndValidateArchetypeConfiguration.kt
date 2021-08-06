@@ -65,7 +65,8 @@ class ExtractAndValidateArchetypeConfiguration(
                         else -> validatedScheme.defaultTags.contains(possibleTag)
                     }
                 }
-                .toSet()
+                .toSet(),
+            mergeEnabled = presetConfiguration.allowConflictMerge ?: validatedScheme.allowConflictMerge
         )
     }
 

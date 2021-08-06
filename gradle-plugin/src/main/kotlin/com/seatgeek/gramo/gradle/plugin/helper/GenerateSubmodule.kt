@@ -17,6 +17,9 @@ class GenerateSubmodule(
             taskInput = taskInput
         )
 
-        mergeTransformedContentIntoCommitDirectory(taskInput)
+        mergeTransformedContentIntoCommitDirectory(
+            isMergeEnabled = archetypeConfiguration.mergeEnabled,
+            taskInput = taskInput
+        )
     }
 }
