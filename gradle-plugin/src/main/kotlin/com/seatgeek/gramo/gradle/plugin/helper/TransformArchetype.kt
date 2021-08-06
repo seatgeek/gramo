@@ -88,7 +88,6 @@ class TransformArchetype(
                 throw IllegalStateException("Unable to delete file: $file.")
             }
 
-
             return null
         }
     }

@@ -63,4 +63,3 @@ class ExtractTaskInput(private val validateDirectoryExists: ValidateDirectoryExi
             .apply { validateDirectoryExists(this) }
     }
 }
-
