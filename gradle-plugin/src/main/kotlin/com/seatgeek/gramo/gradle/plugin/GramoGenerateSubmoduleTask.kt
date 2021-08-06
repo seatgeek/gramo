@@ -72,16 +72,19 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
         val mergeTransformedContentIntoCommitDirectory = MergeTransformedContentIntoCommitDirectory()
         val generateSubmodule = GenerateSubmodule(
             copyArchetypeToBuildDirectory = copyArchetypeToBuildDirectory,
-            extractAndValidateArchetypeConfiguration = extractArchetypeConfiguration,
             mergeTransformedContentIntoCommitDirectory = mergeTransformedContentIntoCommitDirectory,
             transformArchetype = transformArchetype
         )
 
         val taskInput = extractTaskInput(this)
+        val archetypeConfiguration = extractArchetypeConfiguration(project, taskInput)
 
         println("Computed task inputs: $taskInput")
 
-        generateSubmodule(taskInput)
+        generateSubmodule(
+            archetypeConfiguration = archetypeConfiguration,
+            taskInput = taskInput
+        )
 
         when (val execution = taskInput.executionType) {
             is TaskInput.ExecutionType.DryRun -> {
