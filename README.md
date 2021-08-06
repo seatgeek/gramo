@@ -47,6 +47,9 @@ own archetype, but feel free to use the example as a starting point.
 ## Setup
 Artifacts can be downloaded from Maven Central... soon
 
+In the meantime, you can publish it to your local maven repository by cloning this project
+and executing `./gradlew publishLocally` from the root of the project.
+
 ### Gradle Kotlin Script
 ```kotlin
 plugins {
@@ -80,4 +83,8 @@ buildscript {
 }
 
 apply plugin: 'com.seatgeek.gramo'
+
+gramo {
+    archetypesPath = 'path_to_my_archetypes'
+}
 ```

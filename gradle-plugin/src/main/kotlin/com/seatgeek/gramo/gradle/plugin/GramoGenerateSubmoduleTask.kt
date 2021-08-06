@@ -1,7 +1,9 @@
 package com.seatgeek.gramo.gradle.plugin
 
 import com.google.gson.Gson
-import com.seatgeek.gramo.gradle.plugin.model.ArchetypeConfiguration
+import com.seatgeek.gramo.gradle.plugin.entity.ArchetypeConfiguration
+import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
+import com.seatgeek.gramo.gradle.plugin.helper.ExtractTaskInput
 import java.io.File
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
@@ -9,6 +11,8 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 
 open class GramoGenerateSubmoduleTask : DefaultTask() {
+
+    private val extractTaskInput = ExtractTaskInput()
 
     @get:Input
     @set:Option(option = "module_name", description = "Name of the primary module spinal case")
@@ -56,30 +60,32 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
 
     @TaskAction
     fun run() {
-        // TODO: Ensure there are not any uncommitted changes before continuing
-
-        validateInputs()
+        val taskInput = extractTaskInput(this)
         generateModuleFromArchetype()
 
-        if (shouldCommit) {
-            moveModuleIntoPlace()
+        when (val execution = taskInput.executionType) {
+            is TaskInput.ExecutionType.DryRun -> {
+                println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+                println("Generated code can be found at ${execution.buildDirectory} for your inspection.\n")
+                println(
+                    "If you would like to commit this to the codebase, ensure you've committed your code to " +
+                        "git and run the generateSubmodule task again with the command line option --commit.\n\n" +
+                        "By default the code will be committed in the project's root directory, " +
+                        "${project.rootProject.projectDir}, but that can be changed by including the intended" +
+                        "path relative to the project root using: --commit_path=<path_to_existing_module>."
+                )
+                println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+            }
+            is TaskInput.ExecutionType.ProductionRun -> {
+                // TODO: Ensure there are not any uncommitted changes before continuing
+                moveModuleIntoPlace()
 
-            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
-            println("Generated code can be found at ${project.rootProject.projectDir.resolve(commitPathRelativeToRoot)}\n")
-            println("Be sure to include the new module/modules in your settings gradle file and make any required adjustments.")
-            println("It's recommended to use an auto-formatter to convert this new code to your team's style.")
-            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
-        } else {
-            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
-            println("Generated code can be found at ${gramoExtension.buildDirectory} for your inspection.\n")
-            println(
-                "If you would like to commit this to the codebase, ensure you've committed your code to " +
-                "git and run the generateSubmodule task again with the command line option --commit.\n\n" +
-                "By default the code will be committed in the project's root directory, " +
-                "${project.rootProject.projectDir}, but that can be changed by including the intended" +
-                "path relative to the project root using: --commit_path=<path_to_existing_module>."
-            )
-            println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+                println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+                println("Generated code can be found at ${execution.commitDirectory}\n")
+                println("Be sure to include the new module/modules in your settings gradle file and make any required adjustments.")
+                println("It's recommended to use an auto-formatter to convert this new code to your team's style.")
+                println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
+            }
         }
     }
 
@@ -92,7 +98,8 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
             throw exception
         }
 
-        tags = extractArchetypeConfiguration(archetypeDirectory).tags
+        // STOPSHIP: This default wasn't here
+        tags = extractArchetypeConfiguration(archetypeDirectory).tags ?: listOf()
 
         generateAndRecurseDirectories(
             contentRoot = gramoExtension.buildDirectory,
@@ -339,28 +346,6 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
         return archetypesDirectory
             .resolve("$archetype.archetype")
             .apply { validateDirectoryExists(this) }
-    }
-
-    private fun validateInputs() {
-        if (moduleClassName.isBlank()) {
-            throw IllegalArgumentException("Please specify argument: --name=<e.g. VenueCommerce>")
-        }
-
-        if (baseModuleName.isBlank()) {
-            throw IllegalArgumentException("Please specify argument: --module_name=<e.g. venue-commerce (use spinal case)>")
-        }
-
-        if (groupId.isBlank()) {
-            throw IllegalArgumentException("Please specify argument: --group_id=<e.g. com.seatgeek.performer>")
-        }
-
-        if (archetype.isBlank()) {
-            throw IllegalArgumentException("Please specify arguments: --archetype=<e.g. feature>")
-        }
-
-        if (configuration.isBlank()) {
-            throw IllegalArgumentException("Please specify arguments: --configuration=<e.g. android_feature>")
-        }
     }
 
     private fun validateDirectoryExists(file: File) {
