@@ -34,7 +34,7 @@ gradlePlugin {
 }
 
 pluginBundle {
-    tags = listOf("kotlin", "kotlin-compiler-plugin")
+    tags = listOf("kotlin")
 }
 
 mavenPublish {
