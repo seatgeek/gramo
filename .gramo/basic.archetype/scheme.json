@@ -1,0 +1,9 @@
+{
+  "allow_conflict_merge": true,
+  "available_tags": ["android", "use-kts"],
+  "extra_variables": [
+    { "name": "HELLO_WORLD", "value": "Hello Default World!" },
+    { "name": "CONVERSATION_STARTER" }
+  ],
+  "tags": ["use-kts"]
+}

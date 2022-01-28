@@ -13,6 +13,7 @@ sharedBuildSrc/build/
 /captures
 /local
 *.orig
+*.generated
 /projectFilesBackup*
 /reports
 /private_tools

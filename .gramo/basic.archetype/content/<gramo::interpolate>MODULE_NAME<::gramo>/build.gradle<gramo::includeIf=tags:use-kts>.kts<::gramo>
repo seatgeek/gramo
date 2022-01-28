@@ -1,0 +1,12 @@
+plugins {
+    <gramo::includeIf=tags:android>id("com.android.library")<::gramo><gramo::includeIf=!tags:android>kotlin("jvm")<::gramo>
+}
+
+group = "<gramo::interpolate>GROUP_ID<::gramo>"
+version = "<gramo::interpolate>VERSION<::gramo>"
+
+dependencies {
+    /**
+     * TODO - Add dependencies
+     */
+}
