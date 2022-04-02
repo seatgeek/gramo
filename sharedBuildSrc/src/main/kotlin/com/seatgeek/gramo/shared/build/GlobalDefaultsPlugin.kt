@@ -19,7 +19,7 @@ class GlobalDefaultsPlugin : Plugin<Project> {
             gradlePluginPortal()
             jcenter()
             maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
-            maven(url = "http://dl.bintray.com/kotlin/kotlin-dev")
+            maven(url = "https://dl.bintray.com/kotlin/kotlin-dev")
         }
 
         target.buildscript {
@@ -28,7 +28,7 @@ class GlobalDefaultsPlugin : Plugin<Project> {
                 gradlePluginPortal()
                 jcenter()
                 maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
-                maven(url = "http://dl.bintray.com/kotlin/kotlin-dev")
+                maven(url = "https://dl.bintray.com/kotlin/kotlin-dev")
             }
         }
 
@@ -83,7 +83,7 @@ class GlobalDefaultsPlugin : Plugin<Project> {
     private fun Project.configurePublishing() {
         setProperty("GROUP", group)
         setProperty("VERSION_NAME", version)
-        setProperty("POM_ARTIFACT_ID", name)
+        setProperty("POM_ARTIFACT_ID", "gramo-$name")
 
         plugins {
             apply(Dependencies.plugins.mavenPublish)

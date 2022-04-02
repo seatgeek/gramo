@@ -46,12 +46,12 @@ val ktlintFormat: Task by tasks.getting {
 }
 
 val uploadGradlePluginArchives: Task by tasks.creating {
-    dependsOn(gradle.includedBuild("gradle-plugin").task(":uploadArchives"))
+    dependsOn(gradle.includedBuild("gradle-plugin").task(":publish"))
 }
 
-val uploadArchives: Task by tasks.getting {
-    dependsOn(uploadGradlePluginArchives)
-}
+// val publish: Task by tasks.getting {
+//     dependsOn(uploadGradlePluginArchives)
+// }
 
 val publishGradlePluginLocally: Task by tasks.creating {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":publishAllPublicationsToLocalRepository"))
