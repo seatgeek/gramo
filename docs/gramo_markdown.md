@@ -1,4 +1,4 @@
-## Gramo Markdown
+## Gramo Markup
 
 ### Simplified RFC
 Files *_must_* be UTF-8 encoded to be eligible. Any file extension will work.

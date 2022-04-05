@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath("com.seatgeek.gramo:gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.11.1")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.19.0")
         classpath("org.jlleitschuh.gradle:ktlint-gradle:9.2.1")
     }
 }
@@ -46,11 +46,7 @@ val ktlintFormat: Task by tasks.getting {
 }
 
 val uploadGradlePluginArchives: Task by tasks.creating {
-    dependsOn(gradle.includedBuild("gradle-plugin").task(":uploadArchives"))
-}
-
-val uploadArchives: Task by tasks.getting {
-    dependsOn(uploadGradlePluginArchives)
+    dependsOn(gradle.includedBuild("gradle-plugin").task(":publish"))
 }
 
 val publishGradlePluginLocally: Task by tasks.creating {
@@ -71,20 +67,5 @@ subprojects {
                 allWarningsAsErrors = true
             }
         }
-    }
-
-    pluginManager.withPlugin(Dependencies.plugins.mavenPublish) {
-        val mavenPublish = requireNotNull(extensions.findByType(com.vanniktech.maven.publish.MavenPublishPluginExtension::class))
-
-        mavenPublish.nexus {
-            groupId = loadStringProperty("releaseProfile")
-        }
-
-        val uploadArchivesTarget: com.vanniktech.maven.publish.MavenPublishTarget = requireNotNull(
-            mavenPublish.targets.findByName("uploadArchives")
-        )
-
-        uploadArchivesTarget.releaseRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-        uploadArchivesTarget.snapshotRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
     }
 }

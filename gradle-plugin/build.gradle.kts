@@ -3,15 +3,15 @@ import com.seatgeek.gramo.shared.build.loadStringProperty
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.11.1")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:9.2.1")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.19.0")
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:10.2.1")
     }
 }
 
 plugins {
     id("com.seatgeek.gramo.defaults")
-    id("com.gradle.plugin-publish") version "0.12.0"
-    id("com.github.gmazzo.buildconfig") version "2.0.2"
+    id("com.gradle.plugin-publish") version "0.21.0"
+    id("com.github.gmazzo.buildconfig") version "3.0.3"
 
     `java-gradle-plugin`
 }
@@ -35,20 +35,6 @@ gradlePlugin {
 
 pluginBundle {
     tags = listOf("kotlin")
-}
-
-mavenPublish {
-    nexus {
-        groupId = loadStringProperty("releaseProfile")
-    }
-
-    targets {
-        val uploadArchivesTarget: com.vanniktech.maven.publish.MavenPublishTarget = requireNotNull(
-            findByName("uploadArchives")
-        )
-
-        uploadArchivesTarget.releaseRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-    }
 }
 
 dependencies {
