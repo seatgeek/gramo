@@ -1,10 +1,14 @@
 package com.seatgeek.gramo.shared.build
 
+import Dependencies
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.testing.Test
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.buildscript
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.maven
+import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.repositories
 
 class GlobalDefaultsPlugin : Plugin<Project> {
@@ -40,12 +44,8 @@ class GlobalDefaultsPlugin : Plugin<Project> {
         if (target.name != "gramo") {
             target.loadProjectProperties()
 
-            println("${target.name}; ${target.properties}$")
-
             target.group = target.loadStringProperty("gramoGroupId")
             target.version = target.loadStringProperty("gramoVersion")
-
-            println(target.group)
 
             val sourceSets = target.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer
             sourceSets["main"].java.srcDir("src/main/kotlin")
