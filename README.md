@@ -11,7 +11,7 @@ be considered pre-alpha. That being said, this doesn't need to run in production
 safe as long as you commit your code to a source control system before using it.
 
 ## How it works
-TLDR; You can build your own module archetype that employs a specialized markdown
+TL;DR: You can build your own module archetype that employs a specialized markup
 language to annotate files, directories, and code to produce modules matching your specification.
 
 ### Gramo Markdown
@@ -36,12 +36,17 @@ Currently available variables:
 Additional variables can be included as specified within the archetype's scheme.json file or preset
 
 #### includeIf
-To be continued...
 
-##Usage
+```
+TODO
+```
+
+## Usage
+
 The following command will use the "feature" archetype to generate an example module in 
 the root project directory. Realistically, consumers of this project should create their
 own archetype, but feel free to use the example as a starting point.
+
 ```
 ./gradlew :example:generateSubmodule --name=Test --module_name=test --archetype=feature --preset=default --group_id=com.example.test
 ```

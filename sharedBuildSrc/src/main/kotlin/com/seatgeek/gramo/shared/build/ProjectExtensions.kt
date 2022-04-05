@@ -17,7 +17,7 @@ fun Project.loadProjectProperties() {
 
         props.load(
             if (rootProject.name == "gradle-plugin") {
-                file("${rootDir.absolutePath.substringBeforeLast("/")}${File.separator}project.properties")
+                file("${rootDir.absolutePath.substringBeforeLast(File.separator)}${File.separator}project.properties")
                     .inputStream()
             } else {
                 file("${rootDir.absolutePath}${File.separator}project.properties")
