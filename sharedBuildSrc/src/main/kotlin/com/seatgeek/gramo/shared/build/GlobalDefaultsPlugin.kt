@@ -3,13 +3,11 @@ package com.seatgeek.gramo.shared.build
 import Dependencies
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.testing.Test
-import org.gradle.kotlin.dsl.buildscript
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.maven
-import org.gradle.kotlin.dsl.named
-import org.gradle.kotlin.dsl.repositories
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.kotlin.dsl.*
 
 class GlobalDefaultsPlugin : Plugin<Project> {
 
@@ -19,18 +17,12 @@ class GlobalDefaultsPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         target.repositories {
-            google()
             gradlePluginPortal()
-            maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
-            maven(url = "https://dl.bintray.com/kotlin/kotlin-dev")
         }
 
         target.buildscript {
             repositories {
-                google()
                 gradlePluginPortal()
-                maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
-                maven(url = "https://dl.bintray.com/kotlin/kotlin-dev")
             }
         }
 
@@ -39,6 +31,12 @@ class GlobalDefaultsPlugin : Plugin<Project> {
 
             apply(Dependencies.plugins.idea)
             apply(Dependencies.plugins.ktlint)
+        }
+
+        target.extensions.configure<JavaPluginExtension> {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(11))
+            }
         }
 
         if (target.name != "gramo") {
@@ -60,10 +58,6 @@ class GlobalDefaultsPlugin : Plugin<Project> {
                     includeEngines = setOf("spek2")
                 }
             }
-
-            // Kotlin
-            target.dependencies.add("implementation", Dependencies.project.kotlin.reflect)
-            target.dependencies.add("implementation", Dependencies.project.kotlin.stdlib)
 
             // Assertion Library
             target.dependencies.add("testImplementation", Dependencies.test.truth)

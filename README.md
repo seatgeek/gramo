@@ -8,7 +8,8 @@ An extensible template processor for use with gradle in large multi-module proje
 ## Introduction
 This project is the result of a SeatGeek hackathon. In its current state, the project should 
 be considered pre-alpha. That being said, this doesn't need to run in production. Using this is
-safe as long as you commit your code to a source control system before using it.
+safe as long as you keep your code stored in a remote source control system and commit before 
+generating code.
 
 ## How it works
 TL;DR: You can build your own module archetype that employs a specialized markup

@@ -21,8 +21,11 @@ object Dependencies {
         val kotlin = Kotlin
         object Kotlin {
             const val gradlePluginApi = "org.jetbrains.kotlin:kotlin-gradle-plugin-api:${Versions.kotlin}"
-            const val reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
-            const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+        }
+
+        val google = Google
+        object Google {
+            const val gson = "com.google.code.gson:gson:${Versions.google.gson}"
         }
     }
 

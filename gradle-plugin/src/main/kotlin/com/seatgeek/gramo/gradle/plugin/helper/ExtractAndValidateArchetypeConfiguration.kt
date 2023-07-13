@@ -6,6 +6,7 @@ import com.seatgeek.gramo.gradle.plugin.entity.ExtraVariable
 import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
 import com.seatgeek.gramo.gradle.plugin.extension.getStringProperty
 import org.gradle.api.Project
+import java.util.*
 
 class ExtractAndValidateArchetypeConfiguration(
     private val extractArchetypePresetConfiguration: ExtractArchetypePresetConfiguration,
@@ -41,9 +42,9 @@ class ExtractAndValidateArchetypeConfiguration(
                 .plus(
                     mapOf(
                         "GROUP_ID" to taskInput.groupId,
-                        "MODULE_NAME" to taskInput.baseModuleName.toLowerCase(),
+                        "MODULE_NAME" to taskInput.baseModuleName.lowercase(),
                         "MODULE_CLASS_NAME" to taskInput.moduleClassName,
-                        "ROOT_PACKAGE" to taskInput.groupId.toLowerCase(),
+                        "ROOT_PACKAGE" to taskInput.groupId.lowercase(),
                         "ROOT_PACKAGE_PATH" to taskInput.groupId.replace('.', '/'),
                         "VERSION" to taskInput.versionString
                     )

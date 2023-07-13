@@ -3,7 +3,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 gradlePlugin {
@@ -13,7 +13,6 @@ gradlePlugin {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+dependencies {
+    implementation(kotlin("gradle-plugin"))
 }
-

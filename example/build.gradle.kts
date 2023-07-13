@@ -9,6 +9,5 @@ gramo {
 }
 
 application {
-    @Suppress("UnstableApiUsage")
     mainClass.set("com.seatgeek.gramo.example.Main")
 }
