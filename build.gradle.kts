@@ -8,27 +8,27 @@ buildscript {
     }
 }
 
-val cleanGradlePlugin: Task by tasks.creating {
+val cleanGradlePlugin by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":clean"))
 }
 
-val cleanSharedBuildSrc: Task by tasks.creating {
+val cleanSharedBuildSrc by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("sharedBuildSrc").task(":clean"))
 }
 
-val clean: Task by tasks.creating {
+val clean by tasks.registering(Task::class) {
     dependsOn(cleanGradlePlugin, cleanSharedBuildSrc)
 }
 
-val testGradlePlugin: Task by tasks.creating {
+val testGradlePlugin by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":test"))
 }
 
-val test: Task by tasks.creating {
+val test by tasks.registering(Task::class) {
     dependsOn(testGradlePlugin)
 }
 
-val lintKotlinGradlePlugin: Task by tasks.creating {
+val lintKotlinGradlePlugin by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":lintKotlin"))
 }
 
@@ -52,14 +52,14 @@ val formatKotlin by tasks.registering(Task::class) {
     dependsOn(formatKotlinGradlePlugin, formatKotlinSharedBuildSrc)
 }
 
-val uploadGradlePluginArchives: Task by tasks.creating {
+val uploadGradlePluginArchives by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":publish"))
 }
 
-val publishGradlePluginLocally: Task by tasks.creating {
+val publishGradlePluginLocally by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":publishToMavenLocal"))
 }
 
-val publishLocally: Task by tasks.creating {
+val publishLocally by tasks.registering(Task::class) {
     dependsOn(publishGradlePluginLocally)
 }
