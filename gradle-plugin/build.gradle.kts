@@ -1,17 +1,9 @@
 import com.seatgeek.gramo.shared.build.loadStringProperty
 
-buildscript {
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.25.3")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:11.5.0")
-    }
-}
-
 plugins {
     id("com.seatgeek.gramo.defaults")
+    id("com.seatgeek.gramo.publish")
 
-    id("com.gradle.plugin-publish") version "1.2.0"
     id("com.github.gmazzo.buildconfig") version "4.1.1"
 
     `java-gradle-plugin`
@@ -38,7 +30,6 @@ gradlePlugin {
 }
 
 dependencies {
-    implementation(Dependencies.plugins.kotlinGradle)
     implementation(Dependencies.project.kotlin.gradlePluginApi)
 
     implementation(Dependencies.project.google.gson)

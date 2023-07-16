@@ -8,12 +8,7 @@ object Dependencies {
     val plugins = Plugins
     object Plugins {
         const val idea = "idea"
-
-        const val kotlinGradle= "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-
-        const val mavenPublish = "com.vanniktech.maven.publish"
-
-        const val ktlint = "org.jlleitschuh.gradle.ktlint"
+        const val ktlint = "org.jmailen.kotlinter"
     }
 
     val project = Project

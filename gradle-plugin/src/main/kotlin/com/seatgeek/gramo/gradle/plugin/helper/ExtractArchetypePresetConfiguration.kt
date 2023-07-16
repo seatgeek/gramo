@@ -6,7 +6,7 @@ import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
 
 class ExtractArchetypePresetConfiguration(
     private val validateDirectoryExists: ValidateDirectoryExists,
-    private val gson: Gson
+    private val gson: Gson,
 ) {
 
     operator fun invoke(taskInput: TaskInput): ArchetypeConfigurationInputSet {
@@ -29,11 +29,11 @@ class ExtractArchetypePresetConfiguration(
                 System.err.println("Malformed archetype error:")
                 System.err.println(
                     "\t$message " +
-                        "Consider reviewing the archetype at ${taskInput.archetypeDirectory} for a malformed preset file."
+                        "Consider reviewing the archetype at ${taskInput.archetypeDirectory} for a malformed preset file.",
                 )
 
                 throw IllegalArgumentException(message, jsonParseException)
-            }
+            },
         )
     }
 }

@@ -10,7 +10,7 @@ data class TaskInput(
     val groupId: String,
     val moduleClassName: String,
     val executionType: ExecutionType,
-    val versionString: String
+    val versionString: String,
 ) {
     sealed class ExecutionType {
         object DryRun : ExecutionType()

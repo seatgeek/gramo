@@ -56,33 +56,33 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
         val gson = Gson()
         val validateDirectoryExists = ValidateDirectoryExists()
         val copyArchetypeToBuildDirectory = CopyArchetypeToBuildDirectory(
-            validateDirectoryExists = validateDirectoryExists
+            validateDirectoryExists = validateDirectoryExists,
         )
         val extractArchetypePresetConfiguration = ExtractArchetypePresetConfiguration(
             validateDirectoryExists = validateDirectoryExists,
-            gson = gson
+            gson = gson,
         )
         val extractArchetypeSchemeConfiguration = ExtractArchetypeSchemeConfiguration(
             validateDirectoryExists = validateDirectoryExists,
-            gson = gson
+            gson = gson,
         )
         val extractArchetypeConfiguration = ExtractAndValidateArchetypeConfiguration(
             extractArchetypePresetConfiguration = extractArchetypePresetConfiguration,
-            extractArchetypeSchemeConfiguration = extractArchetypeSchemeConfiguration
+            extractArchetypeSchemeConfiguration = extractArchetypeSchemeConfiguration,
         )
         val extractTaskInput = ExtractTaskInput(
-            validateDirectoryExists = validateDirectoryExists
+            validateDirectoryExists = validateDirectoryExists,
         )
         val tokenizeAndTransformDocument = TokenizeAndTransformDocument()
         val transformArchetype = TransformArchetype(
-            tokenizeAndTransformDocument = tokenizeAndTransformDocument
+            tokenizeAndTransformDocument = tokenizeAndTransformDocument,
         )
         val mergeTransformedContentIntoCommitDirectory = MergeTransformedContentIntoCommitDirectory()
         val solveMergeConflicts = SolveMergeConflicts()
         val generateSubmodule = GenerateSubmodule(
             copyArchetypeToBuildDirectory = copyArchetypeToBuildDirectory,
             mergeTransformedContentIntoCommitDirectory = mergeTransformedContentIntoCommitDirectory,
-            transformArchetype = transformArchetype
+            transformArchetype = transformArchetype,
         )
 
         val taskInput = extractTaskInput(this)
@@ -92,7 +92,7 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
 
         val mergeConflicts = generateSubmodule(
             archetypeConfiguration = archetypeConfiguration,
-            taskInput = taskInput
+            taskInput = taskInput,
         )
 
         when (val execution = taskInput.executionType) {
@@ -104,7 +104,7 @@ open class GramoGenerateSubmoduleTask : DefaultTask() {
                         "git and run the generateSubmodule task again with the command line option --commit.\n\n" +
                         "By default the code will be committed in the project's root directory, " +
                         "${project.rootProject.projectDir}, but that can be changed by including the intended" +
-                        "path relative to the project root using: --commit_path=<path_to_existing_module>."
+                        "path relative to the project root using: --commit_path=<path_to_existing_module>.",
                 )
                 println("\n~~~~~~~~~~~~~~~~~~~~~ Gramo ~~~~~~~~~~~~~~~~~~~~~~~\n")
             }

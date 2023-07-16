@@ -1,5 +1,3 @@
-rootProject.buildFileName = "build.gradle.kts"
-
 include(":example")
 
 includeBuild("sharedBuildSrc")

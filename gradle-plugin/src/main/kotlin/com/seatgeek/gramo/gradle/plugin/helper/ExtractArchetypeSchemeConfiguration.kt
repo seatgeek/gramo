@@ -6,7 +6,7 @@ import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
 
 class ExtractArchetypeSchemeConfiguration(
     private val validateDirectoryExists: ValidateDirectoryExists,
-    private val gson: Gson
+    private val gson: Gson,
 ) {
 
     operator fun invoke(taskInput: TaskInput): ArchetypeConfigurationInputSet {
@@ -27,11 +27,11 @@ class ExtractArchetypeSchemeConfiguration(
                 System.err.println("Malformed archetype error:")
                 System.err.println(
                     "\t$message " +
-                        "Consider reviewing the archetype at ${taskInput.archetypeDirectory} for a malformed scheme.json."
+                        "Consider reviewing the archetype at ${taskInput.archetypeDirectory} for a malformed scheme.json.",
                 )
 
                 throw IllegalArgumentException(message, jsonParseException)
-            }
+            },
         )
     }
 }

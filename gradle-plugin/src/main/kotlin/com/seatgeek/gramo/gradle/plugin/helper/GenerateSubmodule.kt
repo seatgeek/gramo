@@ -7,7 +7,7 @@ import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
 class GenerateSubmodule(
     private val copyArchetypeToBuildDirectory: CopyArchetypeToBuildDirectory,
     private val mergeTransformedContentIntoCommitDirectory: MergeTransformedContentIntoCommitDirectory,
-    private val transformArchetype: TransformArchetype
+    private val transformArchetype: TransformArchetype,
 ) {
 
     operator fun invoke(archetypeConfiguration: ArchetypeConfiguration, taskInput: TaskInput): List<MergeConflict> {
@@ -15,12 +15,12 @@ class GenerateSubmodule(
 
         transformArchetype(
             archetypeConfiguration = archetypeConfiguration,
-            taskInput = taskInput
+            taskInput = taskInput,
         )
 
         return mergeTransformedContentIntoCommitDirectory(
             isMergeEnabled = archetypeConfiguration.mergeEnabled,
-            taskInput = taskInput
+            taskInput = taskInput,
         )
     }
 }

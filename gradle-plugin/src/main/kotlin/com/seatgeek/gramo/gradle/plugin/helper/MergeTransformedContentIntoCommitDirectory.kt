@@ -17,12 +17,12 @@ class MergeTransformedContentIntoCommitDirectory {
                         if (isMergeEnabled && exception is FileAlreadyExistsException) {
                             if (targetFile.isDirectory && !exception.file.isDirectory) {
                                 terminalException = IllegalStateException(
-                                    "Unable to merge a file into a directory at $targetFile."
+                                    "Unable to merge a file into a directory at $targetFile.",
                                 )
                                 OnErrorAction.TERMINATE
                             } else if (!targetFile.isDirectory && exception.file.isDirectory) {
                                 terminalException = IllegalStateException(
-                                    "Unable to merge a directory into a file at $targetFile."
+                                    "Unable to merge a directory into a file at $targetFile.",
                                 )
                                 OnErrorAction.TERMINATE
                             } else {

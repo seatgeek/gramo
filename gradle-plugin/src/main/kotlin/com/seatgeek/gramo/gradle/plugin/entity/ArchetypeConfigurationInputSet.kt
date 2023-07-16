@@ -12,5 +12,5 @@ data class ArchetypeConfigurationInputSet(
     val availableTags: Set<String>?,
     @SerializedName("extra_variables")
     val extraVariables: Set<ExtraVariable>?,
-    val tags: Set<String>?
+    val tags: Set<String>?,
 )

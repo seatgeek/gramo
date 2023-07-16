@@ -16,10 +16,8 @@ class GramoGradlePlugin : Plugin<Project> {
             ?.let(Any::toString)
             ?: ""
 
-        rootProject.allprojects.forEach { project ->
-            project.tasks.register("generateSubmodule", GramoGenerateSubmoduleTask::class.java) { task ->
-                task.gramoExtension = extension
-            }
+        tasks.register("generateSubmodule", GramoGenerateSubmoduleTask::class.java) { task ->
+            task.gramoExtension = extension
         }
     }
 }

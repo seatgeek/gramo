@@ -35,7 +35,7 @@ class ExtractTaskInput(private val validateDirectoryExists: ValidateDirectoryExi
         /** TODO: Ensure commitPathRelativeToRoot has to exist */
         val executionType: TaskInput.ExecutionType = if (shouldCommit) {
             TaskInput.ExecutionType.ProductionRun(
-                commitDirectory = project.rootProject.projectDir.resolve(commitPathRelativeToRoot)
+                commitDirectory = project.rootProject.projectDir.resolve(commitPathRelativeToRoot),
             )
         } else {
             TaskInput.ExecutionType.DryRun
@@ -49,7 +49,7 @@ class ExtractTaskInput(private val validateDirectoryExists: ValidateDirectoryExi
             groupId = groupId,
             moduleClassName = moduleClassName,
             executionType = executionType,
-            versionString = gramoExtension.versionString
+            versionString = gramoExtension.versionString,
         )
     }
 

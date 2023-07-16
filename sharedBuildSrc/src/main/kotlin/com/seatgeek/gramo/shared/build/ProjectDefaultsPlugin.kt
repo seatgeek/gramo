@@ -8,12 +8,11 @@ import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.*
+import org.jmailen.gradle.kotlinter.KotlinterPlugin
+import org.jmailen.gradle.kotlinter.tasks.LintTask
+import org.jmailen.gradle.kotlinter.tasks.FormatTask
 
-class GlobalDefaultsPlugin : Plugin<Project> {
-
-    private val publishingAllowlist = setOf(
-        "gradle-plugin"
-    )
+class ProjectDefaultsPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         target.repositories {
@@ -39,6 +38,33 @@ class GlobalDefaultsPlugin : Plugin<Project> {
             }
         }
 
+        target.plugins.withType<KotlinterPlugin> {
+            val lintKt = target.tasks.register<LintTask>("lintKt") {
+                group = "verification"
+
+                source(target.files("src"))
+                exclude(target.buildDir.path)
+
+                reports.set(
+                    mapOf(
+                        "plain" to target.file("build/lint-report.txt")
+                    )
+                )
+            }
+
+            val formatKt = target.tasks.register<FormatTask>("formatKt") {
+                group = "formatting"
+
+                source(target.files("src"))
+                exclude(target.buildDir.path)
+
+                report.set(target.file("build/format-report.txt"))
+            }
+
+            target.tasks.named("lintKotlin") { dependsOn(lintKt) }
+            target.tasks.named("formatKotlin") { dependsOn(formatKt) }
+        }
+
         if (target.name != "gramo") {
             target.loadProjectProperties()
 
@@ -48,10 +74,6 @@ class GlobalDefaultsPlugin : Plugin<Project> {
             val sourceSets = target.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer
             sourceSets["main"].java.srcDir("src/main/kotlin")
             sourceSets["test"].java.srcDir("src/test/kotlin")
-
-            if (publishingAllowlist.contains(target.name)) {
-                target.configurePublishing()
-            }
 
             target.tasks.named("test", Test::class) {
                 useJUnitPlatform {
@@ -73,31 +95,6 @@ class GlobalDefaultsPlugin : Plugin<Project> {
                     dependsOn(build.task(":clean"))
                 }
             }
-        }
-    }
-
-    private fun Project.configurePublishing() {
-        setProperty("GROUP", group)
-        setProperty("VERSION_NAME", version)
-        setProperty("POM_ARTIFACT_ID", "gramo-$name")
-
-        setProperty("POM_INCEPTION_YEAR", "2022")
-        setProperty("POM_URL", "https://github.com/seatgeek/gramo")
-
-        setProperty("POM_LICENSE_NAME", "MIT License")
-        setProperty("POM_LICENSE_URL", "https://github.com/seatgeek/gramo/blob/main/LICENSE")
-        setProperty("POM_LICENSE_DIST", "repo")
-
-        setProperty("POM_SCM_URL", "https://github.com/seatgeek/gramo")
-        setProperty("POM_SCM_CONNECTION", "scm:git:git://github.com/seatgeek/gramo.git")
-        setProperty("POM_SCM_DEV_CONNECTION", "scm:git:ssh://git@github.com/seatgeek/gramo.git")
-
-        setProperty("POM_DEVELOPER_ID", "seatgeek")
-        setProperty("POM_DEVELOPER_NAME", "SeatGeek")
-        setProperty("POM_DEVELOPER_URL", "https://github.com/seatgeek/")
-
-        plugins {
-            apply(Dependencies.plugins.mavenPublish)
         }
     }
 }
