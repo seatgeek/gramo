@@ -13,4 +13,3 @@ object Versions {
         const val truth = "1.1"
     }
 }
-

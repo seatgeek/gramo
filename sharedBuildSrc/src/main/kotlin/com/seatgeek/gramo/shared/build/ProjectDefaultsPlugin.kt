@@ -9,8 +9,9 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.*
 import org.jmailen.gradle.kotlinter.KotlinterPlugin
-import org.jmailen.gradle.kotlinter.tasks.LintTask
+import org.jmailen.gradle.kotlinter.tasks.ConfigurableKtLintTask
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 class ProjectDefaultsPlugin : Plugin<Project> {
 
@@ -41,28 +42,28 @@ class ProjectDefaultsPlugin : Plugin<Project> {
         target.plugins.withType<KotlinterPlugin> {
             val lintKt = target.tasks.register<LintTask>("lintKt") {
                 group = "verification"
-
                 source(target.files("src"))
-                exclude(target.buildDir.path)
-
                 reports.set(
                     mapOf(
-                        "plain" to target.file("build/lint-report.txt")
-                    )
+                        "plain" to target.file("build/lint-report.txt"),
+                    ),
                 )
             }
 
             val formatKt = target.tasks.register<FormatTask>("formatKt") {
                 group = "formatting"
-
                 source(target.files("src"))
-                exclude(target.buildDir.path)
-
                 report.set(target.file("build/format-report.txt"))
             }
 
             target.tasks.named("lintKotlin") { dependsOn(lintKt) }
             target.tasks.named("formatKotlin") { dependsOn(formatKt) }
+
+            target.tasks.withType<ConfigurableKtLintTask> {
+                exclude { element ->
+                    element.file.absolutePath.contains(target.buildDir.absolutePath)
+                }
+            }
         }
 
         if (target.name != "gramo") {

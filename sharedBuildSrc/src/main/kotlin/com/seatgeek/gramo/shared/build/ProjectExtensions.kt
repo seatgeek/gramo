@@ -22,7 +22,7 @@ fun Project.loadProjectProperties() {
             } else {
                 file("${rootDir.absolutePath}${File.separator}project.properties")
                     .inputStream()
-            }
+            },
         )
 
         props.setProperty("gramoPropertiesLoaded", "true")
