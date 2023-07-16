@@ -7,7 +7,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.then
 import org.gradle.api.Project
 import org.gradle.api.Project.DEFAULT_VERSION
+import org.gradle.api.internal.tasks.DefaultTaskContainer.TaskCreatingProvider
 import org.gradle.api.plugins.ExtensionContainer
+import org.gradle.api.tasks.TaskContainer
 import org.mockito.BDDMockito.given
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -17,14 +19,17 @@ object GramoGradlePluginTests : Spek({
 
     describe("apply") {
         val mockProject by memoized { mock<Project>() }
-        val mockRootProject by memoized { mock<Project>() }
-        val mockExtensionContainer by memoized { mock<ExtensionContainer>() }
         val mockExtension by memoized { mock<GramoGradleExtension>() }
 
+        val mockRootProject by memoized { mock<Project>() }
+        val mockExtensionContainer by memoized { mock<ExtensionContainer>() }
+        val mockTaskContainer by memoized { mock<TaskContainer>() }
+
         beforeEachTest {
+            given(mockProject.rootProject).willReturn(mockRootProject)
             given(mockProject.version).willReturn("0.2.1")
             given(mockProject.extensions).willReturn(mockExtensionContainer)
-            given(mockProject.rootProject).willReturn(mockRootProject)
+            given(mockProject.tasks).willReturn(mockTaskContainer)
 
             given(mockExtensionContainer.create(any(), eq(GramoGradleExtension::class.java), eq(mockProject)))
                 .willReturn(mockExtension)

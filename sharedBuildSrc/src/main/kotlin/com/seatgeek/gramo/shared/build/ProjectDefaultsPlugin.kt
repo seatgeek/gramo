@@ -7,7 +7,13 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.buildscript
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.repositories
+import org.gradle.kotlin.dsl.withType
 import org.jmailen.gradle.kotlinter.KotlinterPlugin
 import org.jmailen.gradle.kotlinter.tasks.ConfigurableKtLintTask
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
@@ -66,35 +72,33 @@ class ProjectDefaultsPlugin : Plugin<Project> {
             }
         }
 
-        if (target.name != "gramo") {
-            target.loadProjectProperties()
+        target.loadProjectProperties()
 
-            target.group = target.loadStringProperty("gramoGroupId")
-            target.version = target.loadStringProperty("gramoVersion")
+        target.group = target.loadStringProperty("gramoGroupId")
+        target.version = target.loadStringProperty("gramoVersion")
 
-            val sourceSets = target.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer
-            sourceSets["main"].java.srcDir("src/main/kotlin")
-            sourceSets["test"].java.srcDir("src/test/kotlin")
+        val sourceSets = target.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer
+        sourceSets["main"].java.srcDir("src/main/kotlin")
+        sourceSets["test"].java.srcDir("src/test/kotlin")
 
-            target.tasks.named("test", Test::class) {
-                useJUnitPlatform {
-                    includeEngines = setOf("spek2")
-                }
+        target.tasks.named("test", Test::class) {
+            useJUnitPlatform {
+                includeEngines = setOf("spek2")
             }
+        }
 
-            // Assertion Library
-            target.dependencies.add("testImplementation", Dependencies.test.truth)
+        // Assertion Library
+        target.dependencies.add("testImplementation", Dependencies.test.truth)
 
-            // Test Runner
-            target.dependencies.add("testImplementation", Dependencies.test.spek.jvm)
-            target.dependencies.add("testRuntimeOnly", Dependencies.test.spek.runner)
+        // Test Runner
+        target.dependencies.add("testImplementation", Dependencies.test.spek.jvm)
+        target.dependencies.add("testRuntimeOnly", Dependencies.test.spek.runner)
 
-            target.tasks.named("clean", Delete::class) {
-                delete.add(target.buildDir)
+        target.tasks.named("clean", Delete::class) {
+            delete.add(target.buildDir)
 
-                target.project.gradle.includedBuilds.forEach { build ->
-                    dependsOn(build.task(":clean"))
-                }
+            target.project.gradle.includedBuilds.forEach { build ->
+                dependsOn(build.task(":clean"))
             }
         }
     }
