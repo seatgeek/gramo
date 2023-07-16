@@ -61,7 +61,7 @@ and executing `./gradlew publishLocally` from the root of the project.
 ### Gradle Kotlin Script
 ```kotlin
 plugins {
-  id("com.seatgeek.gramo") version "0.0.1"
+  id("com.seatgeek.gramo") version "0.1.1"
 }
 
 gramo {
@@ -72,7 +72,7 @@ gramo {
 ### Gradle Groovy
 ```groovy
 plugins {
-    id 'com.seatgeek.gramo' version '0.0.1'
+    id 'com.seatgeek.gramo' version '0.1.1'
 }
 
 gramo {
@@ -86,7 +86,7 @@ buildscript {
     // ...
     
     dependencies {
-        classpath 'com.seatgeek.gramo:gradle-plugin:0.0.1'
+        classpath 'com.seatgeek.gramo:gradle-plugin:0.1.1'
     }
 }
 

@@ -25,8 +25,10 @@ class ExtractArchetypeSchemeConfiguration(
             onFailure = { jsonParseException ->
                 val message = "Unable to parse scheme file: $schemeFile."
                 System.err.println("Malformed archetype error:")
-                System.err.println("\t$message " +
-                    "Consider reviewing the archetype at ${taskInput.archetypeDirectory} for a malformed scheme.json.")
+                System.err.println(
+                    "\t$message " +
+                        "Consider reviewing the archetype at ${taskInput.archetypeDirectory} for a malformed scheme.json."
+                )
 
                 throw IllegalArgumentException(message, jsonParseException)
             }

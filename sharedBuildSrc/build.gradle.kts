@@ -4,6 +4,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 gradlePlugin {
@@ -15,4 +16,5 @@ gradlePlugin {
 
 dependencies {
     implementation(kotlin("gradle-plugin"))
+    implementation("org.jlleitschuh.gradle:ktlint-gradle:11.5.0")
 }

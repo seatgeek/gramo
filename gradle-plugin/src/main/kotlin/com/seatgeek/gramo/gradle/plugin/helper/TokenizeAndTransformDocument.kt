@@ -22,9 +22,9 @@ class TokenizeAndTransformDocument {
         var firstOpenIndex: Int
 
         while (transformedDocument
-                .indexOf(gramoOpeningTag, startIndex = offset)
-                .also { firstOpenIndex = it } > -1) {
-
+            .indexOf(gramoOpeningTag, startIndex = offset)
+            .also { firstOpenIndex = it } > -1
+        ) {
             println("Opening tag found at index: $firstOpenIndex")
 
             val nextOpen = transformedDocument.indexOf(gramoOpeningTag, startIndex = firstOpenIndex + 1)
@@ -35,9 +35,10 @@ class TokenizeAndTransformDocument {
             if (nextClose == -1) {
                 throw IllegalStateException(
                     "Malformed gramo tag at:\n${
-                        transformedDocument.substring(
-                            startIndex = firstOpenIndex,
-                            endIndex = (firstOpenIndex + 100).coerceAtMost(transformedDocument.length - 1))
+                    transformedDocument.substring(
+                        startIndex = firstOpenIndex,
+                        endIndex = (firstOpenIndex + 100).coerceAtMost(transformedDocument.length - 1)
+                    )
                     }"
                 )
             }
@@ -67,7 +68,6 @@ class TokenizeAndTransformDocument {
         document: String,
         tokenStart: Int
     ): MarkupTokenTransformation {
-
         val tokenEnd = document
             .indexOf(gramoClosingTag, startIndex = tokenStart)
             .plus(gramoClosingTag.length)

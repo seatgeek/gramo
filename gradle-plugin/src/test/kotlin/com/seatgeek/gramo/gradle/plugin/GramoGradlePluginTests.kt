@@ -1,7 +1,10 @@
 package com.seatgeek.gramo.gradle.plugin
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.then
 import org.gradle.api.Project
 import org.gradle.api.Project.DEFAULT_VERSION
 import org.gradle.api.plugins.ExtensionContainer

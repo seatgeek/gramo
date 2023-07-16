@@ -48,7 +48,7 @@ val uploadGradlePluginArchives: Task by tasks.creating {
 }
 
 val publishGradlePluginLocally: Task by tasks.creating {
-    dependsOn(gradle.includedBuild("gradle-plugin").task(":publishPluginMavenPublicationToMavenLocal"))
+    dependsOn(gradle.includedBuild("gradle-plugin").task(":publishToMavenLocal"))
 }
 
 val publishLocally: Task by tasks.creating {

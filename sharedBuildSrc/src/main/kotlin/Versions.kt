@@ -1,5 +1,8 @@
 object Versions {
     const val kotlin = "1.9.0"
+
+    const val jlleitschuh_ktlint = "11.5.0"
+
     val google = Google
     object Google {
         const val gson = "2.10.1"
