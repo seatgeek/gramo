@@ -1,17 +1,10 @@
 import com.seatgeek.gramo.shared.build.loadStringProperty
 
-buildscript {
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.19.0")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:10.2.1")
-    }
-}
-
 plugins {
     id("com.seatgeek.gramo.defaults")
-    id("com.gradle.plugin-publish") version "0.21.0"
-    id("com.github.gmazzo.buildconfig") version "3.0.3"
+    id("com.seatgeek.gramo.publish")
+
+    id("com.github.gmazzo.buildconfig") version "4.1.1"
 
     `java-gradle-plugin`
 }
@@ -29,28 +22,17 @@ gradlePlugin {
         register("gramo-gradle-plugin") {
             id = loadStringProperty("gramoGradlePluginId")
             implementationClass = "com.seatgeek.gramo.gradle.plugin.GramoGradlePlugin"
+
+            @Suppress("UnstableApiUsage")
+            tags = listOf("kotlin")
         }
     }
-}
-
-pluginBundle {
-    tags = listOf("kotlin")
 }
 
 dependencies {
-    implementation(Dependencies.plugins.kotlinGradle)
     implementation(Dependencies.project.kotlin.gradlePluginApi)
-    implementation(Dependencies.project.kotlin.stdlib)
+
+    implementation(Dependencies.project.google.gson)
 
     testImplementation(Dependencies.test.mockito)
-}
-
-pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).configureEach {
-        kotlinOptions {
-            jvmTarget = "1.8"
-            // Until gradle no longer includes an old version of kotlin
-            allWarningsAsErrors = false
-        }
-    }
 }

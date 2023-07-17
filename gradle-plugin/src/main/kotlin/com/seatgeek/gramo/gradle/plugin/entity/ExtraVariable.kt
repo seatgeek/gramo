@@ -5,5 +5,5 @@ package com.seatgeek.gramo.gradle.plugin.entity
  */
 data class ExtraVariable(
     val name: String?,
-    val value: String?
+    val value: String?,
 )

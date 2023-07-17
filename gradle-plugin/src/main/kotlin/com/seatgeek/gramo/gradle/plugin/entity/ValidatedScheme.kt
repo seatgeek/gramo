@@ -4,7 +4,7 @@ data class ValidatedScheme(
     val allowConflictMerge: Boolean,
     val availableTags: Set<String>,
     val extraVariables: Set<ExtraVariable>,
-    val defaultTags: Set<String>
+    val defaultTags: Set<String>,
 )
 
 /*

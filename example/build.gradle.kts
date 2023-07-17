@@ -1,6 +1,8 @@
 plugins {
-    application
     id("com.seatgeek.gramo")
+    id("com.seatgeek.gramo.defaults")
+
+    application
 }
 
 gramo {
@@ -9,6 +11,5 @@ gramo {
 }
 
 application {
-    @Suppress("UnstableApiUsage")
     mainClass.set("com.seatgeek.gramo.example.Main")
 }

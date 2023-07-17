@@ -1,7 +1,7 @@
 package com.seatgeek.gramo.gradle.plugin
 
-import java.io.File
 import org.gradle.api.Project
+import java.io.File
 
 open class GramoGradleExtension(targetProject: Project) {
     val rootProjectDirectory: File = targetProject.rootProject.projectDir

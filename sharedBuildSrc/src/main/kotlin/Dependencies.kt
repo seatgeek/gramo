@@ -8,12 +8,7 @@ object Dependencies {
     val plugins = Plugins
     object Plugins {
         const val idea = "idea"
-
-        const val kotlinGradle= "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-
-        const val mavenPublish = "com.vanniktech.maven.publish"
-
-        const val ktlint = "org.jlleitschuh.gradle.ktlint"
+        const val ktlint = "org.jmailen.kotlinter"
     }
 
     val project = Project
@@ -21,8 +16,11 @@ object Dependencies {
         val kotlin = Kotlin
         object Kotlin {
             const val gradlePluginApi = "org.jetbrains.kotlin:kotlin-gradle-plugin-api:${Versions.kotlin}"
-            const val reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
-            const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+        }
+
+        val google = Google
+        object Google {
+            const val gson = "com.google.code.gson:gson:${Versions.google.gson}"
         }
     }
 

@@ -6,5 +6,5 @@ fun Project.getStringProperty(name: String): String? =
     runCatching { property(name) }
         .fold(
             onSuccess = { it.toString() },
-            onFailure = { System.getenv(name) }
+            onFailure = { System.getenv(name) },
         )

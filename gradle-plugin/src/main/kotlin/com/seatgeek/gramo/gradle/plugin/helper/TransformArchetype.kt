@@ -5,27 +5,27 @@ import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
 import java.io.File
 
 class TransformArchetype(
-    private val tokenizeAndTransformDocument: TokenizeAndTransformDocument
+    private val tokenizeAndTransformDocument: TokenizeAndTransformDocument,
 ) {
 
     operator fun invoke(taskInput: TaskInput, archetypeConfiguration: ArchetypeConfiguration) {
         scanDirectoryAndTransformRecursive(
             archetypeConfiguration = archetypeConfiguration,
             contentRoot = taskInput.buildDirectory,
-            directory = taskInput.buildDirectory
+            directory = taskInput.buildDirectory,
         )
     }
 
     private fun scanDirectoryAndTransformRecursive(
         archetypeConfiguration: ArchetypeConfiguration,
         contentRoot: File,
-        directory: File
+        directory: File,
     ) {
         val transformedDirectory = if (contentRoot != directory) {
             println("Transforming directory: $directory")
             transformFileName(
                 archetypeConfiguration = archetypeConfiguration,
-                file = directory
+                file = directory,
             )
         } else {
             directory
@@ -38,17 +38,17 @@ class TransformArchetype(
                     scanDirectoryAndTransformRecursive(
                         archetypeConfiguration = archetypeConfiguration,
                         contentRoot = contentRoot,
-                        directory = file
+                        directory = file,
                     )
                 } else {
                     println("Transforming markup in file: $file")
                     transformFileName(
                         archetypeConfiguration = archetypeConfiguration,
-                        file = file
+                        file = file,
                     )?.also { renamedFile ->
                         transformFileContent(
                             archetypeConfiguration = archetypeConfiguration,
-                            file = renamedFile
+                            file = renamedFile,
                         )
                     }
                 }
@@ -57,7 +57,7 @@ class TransformArchetype(
 
     private fun transformFileName(
         archetypeConfiguration: ArchetypeConfiguration,
-        file: File
+        file: File,
     ): File? {
         val transformedFileName = tokenizeAndTransformDocument(archetypeConfiguration, file.name)
         if (transformedFileName.isNotBlank()) {

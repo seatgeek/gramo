@@ -1,71 +1,65 @@
-import com.seatgeek.gramo.shared.build.loadStringProperty
-
-plugins {
-    id("com.seatgeek.gramo.defaults")
-}
-
 buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+
     dependencies {
         classpath("com.seatgeek.gramo:gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.19.0")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:9.2.1")
     }
 }
 
-val cleanGradlePlugin: Task by tasks.creating {
+val cleanGradlePlugin by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":clean"))
 }
 
-val clean: Task by tasks.getting {
-    dependsOn(cleanGradlePlugin)
+val cleanSharedBuildSrc by tasks.registering(Task::class) {
+    dependsOn(gradle.includedBuild("sharedBuildSrc").task(":clean"))
 }
 
-val testGradlePlugin: Task by tasks.creating {
+val clean by tasks.registering(Task::class) {
+    dependsOn(cleanGradlePlugin, cleanSharedBuildSrc)
+}
+
+val testGradlePlugin by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":test"))
 }
 
-val test: Task by tasks.getting {
+val test by tasks.registering(Task::class) {
     dependsOn(testGradlePlugin)
 }
 
-val ktlintCheckGradlePlugin: Task by tasks.creating {
-    dependsOn(gradle.includedBuild("gradle-plugin").task(":ktlintCheck"))
+val lintKotlinGradlePlugin by tasks.registering(Task::class) {
+    dependsOn(gradle.includedBuild("gradle-plugin").task(":lintKotlin"))
 }
 
-val ktlintCheck: Task by tasks.getting {
-    dependsOn(ktlintCheckGradlePlugin)
+val lintKotlinSharedBuildSrc by tasks.registering(Task::class) {
+    dependsOn(gradle.includedBuild("sharedBuildSrc").task(":lintKotlin"))
 }
 
-val ktlintFormatGradlePlugin: Task by tasks.creating {
-    dependsOn(gradle.includedBuild("gradle-plugin").task(":ktlintFormat"))
+val lintKotlin by tasks.registering(Task::class) {
+    dependsOn(lintKotlinGradlePlugin, lintKotlinSharedBuildSrc)
 }
 
-val ktlintFormat: Task by tasks.getting {
-    dependsOn(ktlintFormatGradlePlugin)
+val formatKotlinGradlePlugin by tasks.registering(Task::class) {
+    dependsOn(gradle.includedBuild("gradle-plugin").task(":formatKotlin"))
 }
 
-val uploadGradlePluginArchives: Task by tasks.creating {
+val formatKotlinSharedBuildSrc by tasks.registering(Task::class) {
+    dependsOn(gradle.includedBuild("sharedBuildSrc").task(":formatKotlin"))
+}
+
+val formatKotlin by tasks.registering(Task::class) {
+    dependsOn(formatKotlinGradlePlugin, formatKotlinSharedBuildSrc)
+}
+
+val uploadGradlePluginArchives by tasks.registering(Task::class) {
     dependsOn(gradle.includedBuild("gradle-plugin").task(":publish"))
 }
 
-val publishGradlePluginLocally: Task by tasks.creating {
-    dependsOn(gradle.includedBuild("gradle-plugin").task(":publishAllPublicationsToLocalRepository"))
+val publishGradlePluginLocally by tasks.registering(Task::class) {
+    dependsOn(gradle.includedBuild("gradle-plugin").task(":publishToMavenLocal"))
 }
 
-val publishLocally: Task by tasks.creating {
+val publishLocally by tasks.registering(Task::class) {
     dependsOn(publishGradlePluginLocally)
-}
-
-subprojects {
-    apply(plugin = "com.seatgeek.gramo.defaults")
-
-    pluginManager.withPlugin(Dependencies.targets.jvm) {
-        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).configureEach {
-            kotlinOptions {
-                jvmTarget = "1.8"
-                allWarningsAsErrors = true
-            }
-        }
-    }
 }

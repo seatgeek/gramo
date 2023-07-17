@@ -6,10 +6,11 @@ import com.seatgeek.gramo.gradle.plugin.entity.ExtraVariable
 import com.seatgeek.gramo.gradle.plugin.entity.TaskInput
 import com.seatgeek.gramo.gradle.plugin.extension.getStringProperty
 import org.gradle.api.Project
+import java.util.*
 
 class ExtractAndValidateArchetypeConfiguration(
     private val extractArchetypePresetConfiguration: ExtractArchetypePresetConfiguration,
-    private val extractArchetypeSchemeConfiguration: ExtractArchetypeSchemeConfiguration
+    private val extractArchetypeSchemeConfiguration: ExtractArchetypeSchemeConfiguration,
 ) {
 
     operator fun invoke(project: Project, taskInput: TaskInput): ArchetypeConfiguration {
@@ -28,12 +29,12 @@ class ExtractAndValidateArchetypeConfiguration(
                 .associate { (nullableName, value) ->
                     val name = nullableName ?: throw IllegalArgumentException(
                         "Malformed object: extra_variable entries must have a value for 'name'. " +
-                            "Please include this in your scheme.json or appropriate preset."
+                            "Please include this in your scheme.json or appropriate preset.",
                     )
                     val resolvedValue = project.getStringProperty(name)
                         ?: value
                         ?: throw IllegalArgumentException(
-                            "Extra property '$name' is required, but not supplied. Please include this property and retry"
+                            "Extra property '$name' is required, but not supplied. Please include this property and retry",
                         )
 
                     name to resolvedValue
@@ -41,12 +42,12 @@ class ExtractAndValidateArchetypeConfiguration(
                 .plus(
                     mapOf(
                         "GROUP_ID" to taskInput.groupId,
-                        "MODULE_NAME" to taskInput.baseModuleName.toLowerCase(),
+                        "MODULE_NAME" to taskInput.baseModuleName.lowercase(),
                         "MODULE_CLASS_NAME" to taskInput.moduleClassName,
-                        "ROOT_PACKAGE" to taskInput.groupId.toLowerCase(),
+                        "ROOT_PACKAGE" to taskInput.groupId.lowercase(),
                         "ROOT_PACKAGE_PATH" to taskInput.groupId.replace('.', '/'),
-                        "VERSION" to taskInput.versionString
-                    )
+                        "VERSION" to taskInput.versionString,
+                    ),
                 ),
             // TODO: Could use some better configuration error detection here.
             tags = validatedScheme.availableTags
@@ -66,7 +67,7 @@ class ExtractAndValidateArchetypeConfiguration(
                     }
                 }
                 .toSet(),
-            mergeEnabled = presetConfiguration.allowConflictMerge ?: validatedScheme.allowConflictMerge
+            mergeEnabled = presetConfiguration.allowConflictMerge ?: validatedScheme.allowConflictMerge,
         )
     }
 
@@ -77,7 +78,7 @@ class ExtractAndValidateArchetypeConfiguration(
             availableTags = availableTags
                 ?: throw missingRequiredSchemeKey("available_tags", "Set<String>"),
             extraVariables = extraVariables ?: emptySet(),
-            defaultTags = tags ?: emptySet()
+            defaultTags = tags ?: emptySet(),
         )
     }
 
@@ -90,6 +91,6 @@ class ExtractAndValidateArchetypeConfiguration(
         val allowConflictMerge: Boolean,
         val availableTags: Set<String>,
         val extraVariables: Set<ExtraVariable>,
-        val defaultTags: Set<String>
+        val defaultTags: Set<String>,
     )
 }

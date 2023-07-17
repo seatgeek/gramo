@@ -9,22 +9,22 @@ class TokenizeAndTransformDocument {
         return tokenizeAndTransformDocumentRecursive(
             archetypeConfiguration = archetypeConfiguration,
             document = document,
-            offset = 0
+            offset = 0,
         )
     }
 
     private fun tokenizeAndTransformDocumentRecursive(
         archetypeConfiguration: ArchetypeConfiguration,
         document: String,
-        offset: Int
+        offset: Int,
     ): String {
         var transformedDocument = document
         var firstOpenIndex: Int
 
         while (transformedDocument
                 .indexOf(gramoOpeningTag, startIndex = offset)
-                .also { firstOpenIndex = it } > -1) {
-
+                .also { firstOpenIndex = it } > -1
+        ) {
             println("Opening tag found at index: $firstOpenIndex")
 
             val nextOpen = transformedDocument.indexOf(gramoOpeningTag, startIndex = firstOpenIndex + 1)
@@ -37,8 +37,9 @@ class TokenizeAndTransformDocument {
                     "Malformed gramo tag at:\n${
                         transformedDocument.substring(
                             startIndex = firstOpenIndex,
-                            endIndex = (firstOpenIndex + 100).coerceAtMost(transformedDocument.length - 1))
-                    }"
+                            endIndex = (firstOpenIndex + 100).coerceAtMost(transformedDocument.length - 1),
+                        )
+                    }",
                 )
             }
 
@@ -46,13 +47,13 @@ class TokenizeAndTransformDocument {
                 val tokenTransformation = transformGramoToken(
                     archetypeConfiguration = archetypeConfiguration,
                     document = transformedDocument,
-                    tokenStart = firstOpenIndex
+                    tokenStart = firstOpenIndex,
                 )
 
                 transformedDocument.replaceRange(
                     startIndex = tokenTransformation.startIndex,
                     endIndex = tokenTransformation.endIndex,
-                    replacement = tokenTransformation.value
+                    replacement = tokenTransformation.value,
                 )
             } else {
                 tokenizeAndTransformDocumentRecursive(archetypeConfiguration, transformedDocument, offset = nextOpen)
@@ -65,9 +66,8 @@ class TokenizeAndTransformDocument {
     private fun transformGramoToken(
         archetypeConfiguration: ArchetypeConfiguration,
         document: String,
-        tokenStart: Int
+        tokenStart: Int,
     ): MarkupTokenTransformation {
-
         val tokenEnd = document
             .indexOf(gramoClosingTag, startIndex = tokenStart)
             .plus(gramoClosingTag.length)
@@ -94,7 +94,7 @@ class TokenizeAndTransformDocument {
                 endIndex = tokenEnd,
                 value = requireNotNull(archetypeConfiguration.interpolationMap[trimmedNodeContent]) {
                     "$trimmedNodeContent is not a known key for interpolation."
-                }
+                },
             ).also {
                 println("Returning $it")
             }
@@ -131,7 +131,7 @@ class TokenizeAndTransformDocument {
             val tokenReplacement = if (allConditionsMet) {
                 document.substring(
                     startIndex = tokenStart + gramoOpeningTag.length + attributesLine.value.length + 1,
-                    endIndex = tokenEnd - gramoClosingTag.length
+                    endIndex = tokenEnd - gramoClosingTag.length,
                 )
             } else {
                 ""
@@ -140,12 +140,12 @@ class TokenizeAndTransformDocument {
             return MarkupTokenTransformation(
                 startIndex = tokenStart,
                 endIndex = tokenEnd,
-                value = tokenReplacement
+                value = tokenReplacement,
             )
         }
 
         throw IllegalStateException(
-            "No known attributes matched at node: ${document.substring(tokenStart, tokenEnd)}"
+            "No known attributes matched at node: ${document.substring(tokenStart, tokenEnd)}",
         )
     }
 
